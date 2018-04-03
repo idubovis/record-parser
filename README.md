@@ -25,3 +25,5 @@ Assumptions:
 - The delimiters (commas, pipes and spaces) do not appear anywhere in the data values themselves;
 - FavoriteColor value does not require validation;
 - Persistent datastore is not required for the web service.
+
+The repository also contains packages referenced by the web application and test applications.
