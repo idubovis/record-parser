@@ -1,0 +1,5 @@
+Brown | Amy | Female | Pink | 1/12/99
+Young | Brian | Male | Green | 4/03/75
+Johnson | Eric | Male | Gray | 10/15/69
+West | Laura | female | Red | 12/08/91
+Young | Brian | Male | Green | 4/03/75
