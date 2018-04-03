@@ -15,7 +15,7 @@ RecordParser solution contains 4 projects:
 - GET /records/gender - returns records sorted by gender (the same as the correspondent sorting from the console app);
 - GET /records/birthdate - returns records sorted by birthdate (the same as the correspondent sorting from the console app);
 - GET /records/name - returns records sorted by name (sorted by last name, then by first name, ascending);
-- POST /records - Post a single data line in any of the 3 formats supported by your existing code.
+- POST /records - Post a single data line in any of the 3 formats supported by RecordParser.
 
   All endpoints return JSON-formatted result.
 
