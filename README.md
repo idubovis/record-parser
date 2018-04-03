@@ -12,8 +12,8 @@ RecordParser solution contains 4 projects:
 
 3. RecordParser.WebApp - RESTful web service that uses entities from RecordParser application to parse and sort data, and provides API with the following endpoints:
 - GET /records - returns all records in the original order;
-- GET /records/gender - returns records sorted by gender (the same the correspondent sorting from the console app);
-- GET /records/birthdate - returns records sorted by birthdate (the same the correspondent sorting from the console app);
+- GET /records/gender - returns records sorted by gender (the same as the correspondent sorting from the console app);
+- GET /records/birthdate - returns records sorted by birthdate (the same as the correspondent sorting from the console app);
 - GET /records/name - returns records sorted by name (sorted by last name, then by first name, ascending);
 - POST /records - Post a single data line in any of the 3 formats supported by your existing code.
 
