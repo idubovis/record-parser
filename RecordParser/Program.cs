@@ -16,7 +16,7 @@ namespace RecordParser
                 @"../../App_Data/records3.txt"
             });
 
-            OutputCollection("(0) Original distinct collection of records", recordSet);
+            OutputCollection("(0) Original collection of distinct records", recordSet);
 
             OutputCollection("(1) Records sorted by Gender, then by Last Name, acending", recordSet.SortByGenderAndThenByLastName());
             OutputCollection("(2) Records sorted by Date of Birth, ascending", recordSet.SortByDateOfBirth());
