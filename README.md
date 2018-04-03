@@ -24,4 +24,4 @@ RecordParser solution contains 4 projects:
 Assumptions:
 - The delimiters (commas, pipes and spaces) do not appear anywhere in the data values themselves;
 - FavoriteColor value does not require validation;
-- Persistent datastore is not required for the web Service.
+- Persistent datastore is not required for the web service.
