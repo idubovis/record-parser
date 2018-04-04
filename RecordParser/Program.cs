@@ -7,7 +7,7 @@ namespace RecordParser
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Record Parser Console Application.\nDeveloped by Ilya Dubovis. April 2018.");
+            Console.WriteLine("Record Parser Console Application.");
 
             var recordSet = RecordSet.CreateRecordSet(new string[] 
             {
