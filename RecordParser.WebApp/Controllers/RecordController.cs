@@ -10,13 +10,11 @@ namespace RecordParser.WebApp.Controllers
 
         public RecordController()
         {
-            // use production repository by default
             _recordRepository = new RecordRepository();
         }
 
         public RecordController(IRecordRepository recordRepository)
         {
-            // inject repository
             _recordRepository = recordRepository;
         }
 
