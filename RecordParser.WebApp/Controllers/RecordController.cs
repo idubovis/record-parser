@@ -35,7 +35,25 @@ namespace RecordParser.WebApp.Controllers
                 case "name":
                     return Ok(_recordRepository.GetRecords().SortByLastNameThenByFirstName());
                 default:
-                    return BadRequest("Invalid request: records/" + sortType);
+                    return    BadRequest("Invalid request: records/" + sortType);
+            }
+        }
+
+        [Route("records")]
+        [HttpPost]
+        public IHttpActionResult Post([FromBody]Record record)
+        {
+            try
+            {
+                var records = _recordRepository.GetRecords();
+                if (records.Contains(record))
+                    records.Remove(record);
+                records.Add(record);
+                return Ok(record);
+            }
+            catch(ArgumentException e)
+            {
+                return BadRequest(e.Message);
             }
         }
 
@@ -45,14 +63,14 @@ namespace RecordParser.WebApp.Controllers
         {
             try
             {
-                var record = RecordSet.CreateRecord(value);
+                var record = RecordSet.CreateRecord(value.ToString());
                 var records = _recordRepository.GetRecords();
                 if (records.Contains(record))
                     records.Remove(record);
                 records.Add(record);
                 return Ok(record);
             }
-            catch(ArgumentException e)
+            catch (ArgumentException e)
             {
                 return BadRequest(e.Message);
             }

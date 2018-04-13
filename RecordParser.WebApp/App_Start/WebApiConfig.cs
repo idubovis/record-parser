@@ -7,6 +7,9 @@ namespace RecordParser.WebApp
     {
         public static void Register(HttpConfiguration config)
         {
+            // Enable Cross-Origin Requests
+            config.EnableCors();
+            
             // Web API routes
             config.MapHttpAttributeRoutes();
 

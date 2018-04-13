@@ -1,11 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecordParser.WebApp.Models;
-using RecordParser.WebApp.Controllers;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using RecordParser.WebApp.Controllers;
+using RecordParser.WebApp.Models;
 
 namespace RecordParser.WebApp.Tests
 {
@@ -48,7 +51,7 @@ namespace RecordParser.WebApp.Tests
                 new Record("Brown", "Amy", Record.Genders.Female, "Red", new DateTime(1995, 3, 13)),
                 new Record("Young", "Emily", Record.Genders.Female, "Green", new DateTime(1978, 9, 2)),
                 new Record("Craig", "Alex", Record.Genders.Male, "Purple", new DateTime(2001, 2, 10)),
-                new Record("Doe", "John", Record.Genders.Male, "Blue", new DateTime(1990, 2, 10))   
+                new Record("Doe", "John", Record.Genders.Male, "Blue", new DateTime(1990, 2, 10))
             };
 
             Assert.IsTrue(Enumerable.SequenceEqual(expectedRecordSet, contentResult.Content as IEnumerable<Record>));
@@ -112,7 +115,7 @@ namespace RecordParser.WebApp.Tests
             var controller = new RecordController(new TestRecordRepository());
 
             var record = "Johnson, Mike, Male, Green, 2/18/87";
-            
+
             IHttpActionResult actionResult = controller.Post(record);
             var contentResult = actionResult as OkNegotiatedContentResult<Record>;
 
@@ -191,8 +194,48 @@ namespace RecordParser.WebApp.Tests
 
             Assert.IsNotInstanceOfType(actionResult, typeof(OkNegotiatedContentResult<Record>));
         }
+
+        //-----------------------------  Test HTTP requests  ------------------------------//
+        // requires RecordParser.WebApi deployed at http://localhost
+
+        [TestMethod]
+        public async void TestHTTPGetRecordRequest()
+        {
+            try
+            {
+                var client = new TestHttpClient("http://localhost/");
+                var records = await client.GetRecordsAsync("name"); 
+
+                Assert.IsNotNull(records);
+            }
+            catch (Exception e)
+            {
+                // bad URL
+                Assert.IsTrue(false);
+            }  
+        }
+
+        public async void TestHTTPPostRecordRequest()
+        {
+            var record = new Record("Johnson", "Mike", Record.Genders.Male, "Green", new DateTime(1987, 2, 18));
+            try
+            {
+                var client = new TestHttpClient("http://localhost/");
+                var record1 = await client.PostRecordAsync(record);
+                Assert.IsNotNull(record1);
+                Assert.AreEqual(record, record1);
+            }
+            catch (Exception)
+            {
+                //Post failed
+                Assert.IsTrue(false);
+            }
+        }
     }
 
+    /// <summary>
+    /// Test Repository
+    /// </summary>
     class TestRecordRepository : IRecordRepository
     {
         private RecordSet _recordSet;
@@ -212,6 +255,38 @@ namespace RecordParser.WebApp.Tests
         public void SaveRecord(Record record)
         {
             // do nothing
+        }
+    }
+
+    /// <summary>
+    /// HttpClient helper class
+    /// </summary>
+    class TestHttpClient
+    {
+        private readonly HttpClient _client;
+
+        public TestHttpClient(string url)
+        {
+            _client = new HttpClient();
+            _client.BaseAddress = new Uri(url);
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        public async Task<IEnumerable<Record>> GetRecordsAsync(string sortType)
+        {
+            IEnumerable<Record> records = null;
+            HttpResponseMessage response = await _client.GetAsync($"records/{sortType}");
+            if (response.IsSuccessStatusCode)
+                records = await response.Content.ReadAsAsync<IEnumerable<Record>>();
+            return records;
+        }
+
+        public async Task<Record> PostRecordAsync(Record record)
+        {
+            HttpResponseMessage response = await _client.PostAsJsonAsync("records", record);
+            response.EnsureSuccessStatusCode();
+            return record;
         }
     }
 }

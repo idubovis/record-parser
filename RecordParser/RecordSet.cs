@@ -60,6 +60,34 @@ namespace RecordParser
             return recordSet;
         }
 
+        private static IEnumerable<Record> GetRecordsFromFile1(string filepath)
+        {
+            if (!File.Exists(filepath))
+                throw new FileNotFoundException("Input file was not found", filepath);
+
+            var recordSet = new RecordSet();
+
+            string line;
+            using (var file = new StreamReader(filepath))
+            {
+                while ((line = file.ReadLine()) != null)
+                {
+                    Record record = null;
+                    try
+                    {
+                        record = CreateRecord(line);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        // if a line is invalid, log the exception and continue
+                        Console.WriteLine("Exception: {0} in input file {1}.", e.Message, filepath);
+                        continue;
+                    }
+                    yield return record;
+                }
+            }
+        }
+
         /// <summary>
         /// Parse a record from a text file line and create an instance of Record class
         /// </summary>
@@ -105,6 +133,35 @@ namespace RecordParser
 
         public IEnumerable<Record> SortByLastNameDescending() => this.OrderByDescending(r => r.LastName);
 
-        public IEnumerable<Record> SortByLastNameThenByFirstName() => this.OrderBy(r => r.LastName).ThenBy(r => r.FirstName); 
+        public IEnumerable<Record> SortByLastNameThenByFirstName() => this.OrderBy(r => r.LastName).ThenBy(r => r.FirstName);
+
+        public IEnumerable<Record> SortByColor() 
+        {
+            //this.ToList<Record>().Sort(new ComparerByColorThenByLastName());
+            SortedSet<Record> set = new SortedSet<Record>(this, new ComparerByColorThenByLastName());
+            return set;
+        }
+
+        class ComparerByLastName : IComparer<Record>
+        {
+            public int Compare(Record x, Record y)
+            {
+                return x.LastName.CompareTo(y.LastName);
+            }
+        }
+
+        class ComparerByColorThenByLastName : IComparer<Record>
+        {
+            public int Compare(Record x, Record y)
+            {
+                var result = x.FavoriteColor.CompareTo(y.FavoriteColor);
+                if(result == 0)
+                    return x.LastName.CompareTo(y.LastName);
+                return result;
+            }
+        }
+
+
     }
 }
+

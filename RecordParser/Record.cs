@@ -6,6 +6,9 @@ namespace RecordParser
     {
         public enum Genders { Invalid = -1, Female, Male };
 
+        private static int RecordID = 1;
+
+        public int Id { get; }
         public string LastName { get; private set; }
         public string FirstName { get; private set; }
         public Genders Gender { get; private set; }
@@ -14,6 +17,7 @@ namespace RecordParser
 
         public Record(string lastName, string firstName, Genders gender, string favoriteColor, DateTime dateOfBirth)
         {
+            Id = RecordID++;
             LastName = lastName;
             FirstName = firstName;
             Gender = gender;
@@ -25,7 +29,7 @@ namespace RecordParser
         {
             var gender = Gender == Genders.Female ? "Female" : "Male";
             var birthdate = string.Format("{0:M/d/yyyy}", DateOfBirth);
-            return $"{LastName}, {FirstName}, {gender}, {FavoriteColor}, {birthdate}";
+            return $"{Id}, {LastName}, {FirstName}, {gender}, {FavoriteColor}, {birthdate}";
         }
 
         // The below methods are necessary to prevent duplicates in RecordSet
